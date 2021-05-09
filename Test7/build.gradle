@@ -1,0 +1,70 @@
+plugins {
+    id 'java'
+    // Apply the application plugin to add support for building a CLI application.
+    id 'application'
+    id 'checkstyle'
+    id 'pmd'
+    // id 'com.github.spotbugs' version '4.0.5'
+}
+
+pmd {
+    ruleSetFiles "pmd-rules.xml"
+    ruleSets = []
+    ignoreFailures = true
+    consoleOutput = true
+}
+
+checkstyle {
+    toolVersion = '5.9'
+}
+
+
+// 配置checkstyle规则
+checkstyle {
+    configFile file("checkstyle.xml")
+    ignoreFailures = true
+    showViolations true
+
+}
+
+group 'org.ctgu'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    repositories {
+        maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+    }
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    // This dependency is found on compile classpath of this component and consumers.
+    implementation 'com.google.guava:guava:27.0.1-jre'
+    implementation 'org.junit.jupiter:junit-jupiter:5.4.2'
+    testImplementation group: 'org.junit.platform', name: 'junit-platform-launcher', version:'1.2.0'
+    testImplementation group: 'org.junit.vintage', name: 'junit-vintage-engine', version:'5.2.0'
+    // Use JUnit test framework
+    testImplementation 'junit:junit:4.12'
+}
+
+
+test {
+    useJUnitPlatform()
+}
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+task staticAnalysis(type:GradleBuild) {
+    tasks = [
+            'clean',
+            'checkstyleMain',
+            'checkstyleTest',
+            'pmdMain',
+            //'pmdTest', 'spotbugsMain',
+            //'spotbugsTest'
+    ]
+}
