@@ -4,7 +4,7 @@ plugins {
     id 'jacoco'
     id 'checkstyle'
     id 'pmd'
-    id 'com.github.spotbugs' version '1.7.1'
+    // id 'com.github.spotbugs' version '1.7.1'
 }
 
 sourceSets {
@@ -25,6 +25,10 @@ configurations {
 }
 
 repositories {
+    maven {
+        url 'https://maven.aliyun.com/repository/public/'
+    }
+    mavenLocal()
     mavenCentral()
 }
 
@@ -73,13 +77,14 @@ pmd {
     ruleSetFiles "pmd-rules.xml"
     ruleSets = []
 }
-
+/*
 tasks.withType(com.github.spotbugs.SpotBugsTask) {
     reports {
         xml.enabled = false
         html.enabled = true
     }
 }
+*/
 
 task staticAnalysis(type: GradleBuild) {
     tasks = [
@@ -91,8 +96,8 @@ task staticAnalysis(type: GradleBuild) {
         'pmdTest',
         'pmdDefaultTest',
         'spotbugsMain',
-        'spotbugsTest',
-        'spotbugsDefaultTest',
+        //'spotbugsTest',
+        //'spotbugsDefaultTest',
     ]
 }
 
